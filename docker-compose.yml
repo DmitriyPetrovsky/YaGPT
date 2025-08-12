@@ -1,0 +1,26 @@
+services:
+  yagpt:
+    build: .
+    image: yagpt
+    container_name: yagpt
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/yagpt
+      - SPRING_DATASOURCE_USERNAME=yagptuser
+      - SPRING_DATASOURCE_PASSWORD=N1VSIGHd
+
+  db:
+    image: postgres:16.1
+    container_name: postgres
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_PASSWORD=N1VSIGHd
+      - POSTGRES_USER=yagptuser
+      - POSTGRES_DB=yagpt
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
